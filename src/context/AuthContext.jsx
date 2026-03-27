@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-const API_URL = 'https://tictactoe-multiplayer-75ud.onrender.com/api';
+const API_URL = 'https://tictactoe-multiplayer-75ud.onrender.com';
 
 const AuthContext = createContext(null);
 
