@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 /**
  * Shared helper utilities used across the backend.
  */
@@ -26,15 +28,28 @@ const checkWinner = (board) => {
 
 /**
  * Generate a 6-character room ID (no ambiguous chars).
+ * Optionally accepts a Set of existing IDs to guarantee uniqueness.
+ * @param {Set<string>} [existingIds] — set of IDs currently in use
  * @returns {string}
  */
-const generateRoomId = () => {
+const generateRoomId = (existingIds) => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let result = '';
-  for (let i = 0; i < 6; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  const MAX_ATTEMPTS = 100;
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    let result = '';
+    for (let i = 0; i < 6; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    // If no existing set provided, or the ID is unique, return it
+    if (!existingIds || !existingIds.has(result)) {
+      return result;
+    }
   }
-  return result;
+
+  // Fallback: use crypto for unpredictable uniqueness
+  const fallback = crypto.randomBytes(4).toString('hex').toUpperCase().slice(0, 6);
+  return fallback;
 };
 
 module.exports = { checkWinner, generateRoomId, WINNING_COMBINATIONS };

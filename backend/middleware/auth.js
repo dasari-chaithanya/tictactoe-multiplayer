@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const logger = require('../utils/logger');
 
 /**
  * Express middleware — verifies Bearer token and attaches user to req.
@@ -34,33 +35,35 @@ const protect = async (req, res, next) => {
 };
 
 /**
- * Socket.IO authentication helper.
- * Reads JWT from socket.handshake.auth.token,
- * attaches userId & username to the socket object.
+ * Socket.IO authentication middleware.
+ * Use with io.use() to reject unauthenticated connections at the handshake.
+ * Attaches userId & username to the socket object on success.
  */
-const authenticateSocket = async (socket) => {
+const socketAuthMiddleware = async (socket, next) => {
   const token = socket.handshake.auth?.token;
   if (!token) {
-    socket.userId = null;
-    socket.username = 'Guest';
-    return;
+    logger.warn(`Socket auth rejected: no token (${socket.id})`);
+    return next(new Error('Authentication required. Please log in.'));
   }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByPk(decoded.id, {
       attributes: ['id', 'username'],
     });
-    if (user) {
-      socket.userId = user.id;
-      socket.username = user.username;
-    } else {
-      socket.userId = null;
-      socket.username = 'Guest';
+
+    if (!user) {
+      logger.warn(`Socket auth rejected: user not found (${socket.id})`);
+      return next(new Error('User not found. Token may be invalid.'));
     }
-  } catch {
-    socket.userId = null;
-    socket.username = 'Guest';
+
+    socket.userId = user.id;
+    socket.username = user.username;
+    next();
+  } catch (err) {
+    logger.warn(`Socket auth rejected: invalid token (${socket.id}) — ${err.message}`);
+    return next(new Error('Authentication failed. Token is invalid or expired.'));
   }
 };
 
-module.exports = { protect, authenticateSocket };
+module.exports = { protect, socketAuthMiddleware };

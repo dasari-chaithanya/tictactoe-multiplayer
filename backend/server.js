@@ -14,15 +14,30 @@ const authRoutes = require('./routes/authRoutes');
 const gameRoutes = require('./routes/gameRoutes');
 
 // ---------------------------------------------------------------------------
+// CORS origin helper — supports comma-separated CLIENT_URL for multi-origin
+// e.g. CLIENT_URL=https://app.example.com,https://preview.example.com
+// ---------------------------------------------------------------------------
+const parseOrigins = () => {
+  const raw = process.env.CLIENT_URL || 'http://localhost:5173';
+  const origins = raw.split(',').map((o) => o.trim()).filter(Boolean);
+  return origins.length === 1 ? origins[0] : origins;
+};
+
+const allowedOrigins = parseOrigins();
+
+// ---------------------------------------------------------------------------
 // Express app & HTTP server
 // ---------------------------------------------------------------------------
 const app = express();
 const server = http.createServer(app);
 
+// Trust proxy — required on Render (and most PaaS) for correct req.ip
+app.set('trust proxy', 1);
+
 // Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
   },
   pingTimeout: 60000,
@@ -33,10 +48,10 @@ const io = new Server(server, {
 // Middleware
 // ---------------------------------------------------------------------------
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: allowedOrigins,
   credentials: true,
 }));
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ---------------------------------------------------------------------------
@@ -74,14 +89,15 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   await connectDB();
 
-  // Sync models (creates / alters tables as needed)
-  await sequelize.sync({ alter: true });
+  // sync() creates tables if they don't exist but does NOT alter existing ones.
+  // For schema changes in production, use Sequelize migrations instead of alter:true.
+  await sequelize.sync();
   logger.info('Database tables synced');
 
   server.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`);
     logger.info(`Socket.IO ready for connections`);
-    logger.info(`Client URL: ${process.env.CLIENT_URL || 'http://localhost:5173'}`);
+    logger.info(`Allowed origins: ${Array.isArray(allowedOrigins) ? allowedOrigins.join(', ') : allowedOrigins}`);
   });
 };
 
@@ -90,6 +106,10 @@ const startServer = async () => {
 // ---------------------------------------------------------------------------
 const shutdown = async (signal) => {
   logger.info(`${signal} received — shutting down gracefully`);
+
+  // Save all in-flight games before closing
+  const { saveAllInFlightGames } = require('./socket/gameHandler');
+  await saveAllInFlightGames();
 
   // Stop accepting new connections
   server.close(() => {
