@@ -1,0 +1,82 @@
+﻿
+D:\Full stack\Projects\tictactoe\src\components\Board.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Full stack\Projects\tictactoe\src\components\Cell.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Full stack\Projects\tictactoe\src\components\GameControls.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Full stack\Projects\tictactoe\src\components\ModeSelector.jsx
+   4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  15:38  error  'Icon' is defined but never used                                               no-unused-vars
+
+D:\Full stack\Projects\tictactoe\src\components\ScoreBoard.jsx
+   2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+  11:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+   9 |   useEffect(() => {
+  10 |     if (score > prevScore) {
+> 11 |       setJustScored(true);
+     |       ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  12 |       const timer = setTimeout(() => setJustScored(false), 1000);
+  13 |       setPrevScore(score);
+  14 |       return () => clearTimeout(timer);  react-hooks/set-state-in-effect
+
+D:\Full stack\Projects\tictactoe\src\components\ThemeToggle.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+D:\Full stack\Projects\tictactoe\src\hooks\useGameLogic.js
+  17:9   error    'playerSymbol' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+  30:6   warning  React Hook useEffect has a missing dependency: 'winnerInfo'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/exhaustive-deps
+  38:11  error    Error: Cannot access variable before it is declared
+
+`handleMove` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  36 |         const bestMoveIndex = getBestMove([...board], aiSymbol);
+  37 |         if (bestMoveIndex !== -1) {
+> 38 |           handleMove(bestMoveIndex, aiSymbol);
+     |           ^^^^^^^^^^ `handleMove` accessed before it is declared
+  39 |         }
+  40 |         setAiIsThinking(false);
+  41 |       }, 500); 
+
+  44 |   }, [xIsNext, gameMode, board, gameEnded]);
+  45 |
+> 46 |   const handleMove = useCallback((index, currentSymbol = xIsNext ? 'X' : 'O') => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 47 |     if (board[index] || gameEnded || (gameMode === GAME_MODES.PVAI && currentSymbol === aiSymbol && xIsNext)) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 48 |       return;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 49 |     }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 50 |
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 51 |     const newBoard = [...board];
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 52 |     newBoard[index] = currentSymbol;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 53 |     setBoard(newBoard);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 54 |     setXIsNext(currentSymbol === 'X' ? false : true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 55 |   }, [board, gameEnded, gameMode, xIsNext]);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `handleMove` is declared here
+  56 |
+  57 |   const resetGame = () => {
+  58 |     setBoard(Array(9).fill(null));  react-hooks/immutability
+  44:6   warning  React Hook useEffect has a missing dependency: 'handleMove'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react-hooks/exhaustive-deps
+
+D:\Full stack\Projects\tictactoe\src\pages\Game.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Γ£û 13 problems (11 errors, 2 warnings)
+

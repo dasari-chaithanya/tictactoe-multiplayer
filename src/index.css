@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: #f1f5f9;
+    --foreground: #0f172a;
+    --primary: #6366f1;
+    --primary-foreground: #ffffff;
+    --secondary: #d946ef;
+    --secondary-foreground: #ffffff;
+    --success: #10b981;
+    --danger: #ef4444;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --border: #e2e8f0;
+    --ring: #6366f1;
+  }
+
+  .dark {
+    --background: #020617;
+    --foreground: #f8fafc;
+    --primary: #818cf8;
+    --primary-foreground: #ffffff;
+    --secondary: #e879f9;
+    --secondary-foreground: #ffffff;
+    --success: #34d399;
+    --danger: #f87171;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --border: #1e293b;
+    --ring: #818cf8;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply font-sans;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dark .glass {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Specific floating card effect for the board and main elements */
+  .floating-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    transform: translateZ(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .dark .floating-card {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+  .floating-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.15);
+  }
+  .dark .floating-card:hover {
+    box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+  .dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.5);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.8);
+  }
+
+  .premium-gradient-bg {
+    @apply bg-gradient-to-br from-indigo-100 via-white to-fuchsia-100;
+  }
+
+  .dark .premium-gradient-bg {
+    @apply bg-gradient-to-br from-slate-950 via-indigo-950/40 to-fuchsia-950/20;
+  }
+}
