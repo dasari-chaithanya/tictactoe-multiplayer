@@ -18,7 +18,7 @@ const gameRoutes = require('./routes/gameRoutes');
 // e.g. CLIENT_URL=https://app.example.com,https://preview.example.com
 // ---------------------------------------------------------------------------
 const parseOrigins = () => {
-  const raw = process.env.CLIENT_URL || 'https://tictactoe-multiplayer-75ud.onrender.com/';
+  const raw = process.env.CLIENT_URL || 'https://tictactoe-multiplayer-75ud.onrender.com';
   const origins = raw.split(',').map((o) => o.trim()).filter(Boolean);
   return origins.length === 1 ? origins[0] : origins;
 };

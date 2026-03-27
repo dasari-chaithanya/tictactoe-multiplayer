@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-const BACKEND_URL = 'https://tictactoe-multiplayer-75ud.onrender.com/';
+const BACKEND_URL = 'https://tictactoe-multiplayer-75ud.onrender.com';
 
 /**
  * Custom hook that encapsulates all Socket.IO multiplayer logic.
